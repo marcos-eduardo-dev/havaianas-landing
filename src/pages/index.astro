@@ -1,0 +1,232 @@
+---
+import "../styles/global.css";
+import { models } from "../data/models.js";
+
+const first = models[0];
+const heroModels = models.map(({ key, word, bg, pair, single }) => ({
+  key,
+  word,
+  bg,
+  pair,
+  single,
+}));
+
+const pillars = [
+  {
+    title: "Borracha de verdade",
+    text: "Solado macio, que não deforma e não solta as tiras.",
+  },
+  {
+    title: "Feita para todo mundo",
+    text: "Do mercado da esquina à passarela, o mesmo par.",
+  },
+  {
+    title: "Cor em primeiro lugar",
+    text: "Centenas de combinações lançadas a cada coleção.",
+  },
+];
+
+const stats = [
+  { value: 1962, label: "ano em que o primeiro par foi criado", plain: true, from: 1900 },
+  { value: 100, prefix: "+", label: "países onde a marca é vendida" },
+  { value: 200, prefix: "+", suffix: " mi", label: "pares produzidos por ano" },
+];
+---
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Havaianas — landing conceito</title>
+    <meta
+      name="description"
+      content="Landing page conceito para a Havaianas: modelos, cores e a história da sandália mais famosa do Brasil. Projeto não oficial."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline>
+      // Esconde o hero até a animação de entrada assumir; se o JS falhar, mostra em 3s.
+      // A abertura (splash) só aparece com JS e sem "reduzir movimento". Se o script principal
+      // não carregar em 6s, mostra o site mesmo assim; quando carrega, ele cancela este timer.
+      var root = document.documentElement;
+      root.classList.add("js");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        root.classList.add("splash-on");
+      }
+      window.__introFallback = setTimeout(function () {
+        root.classList.remove("js", "splash-on");
+      }, 6000);
+    </script>
+  </head>
+  <body style={`--accent:${first.bg}`}>
+    <div class="splash" id="splash" role="presentation" style={`background:${first.bg}`}>
+      <div class="splash-mark" aria-hidden="true">
+        <div class="splash-fan">
+          {models.map((m) => <img class="splash-sandal" src={m.single} alt="" />)}
+        </div>
+        <span class="splash-word">
+          {"havaianas".split("").map((c) => <span class="splash-letter">{c}</span>)}
+        </span>
+      </div>
+      <span class="splash-count" aria-hidden="true"><span id="splash-count">0</span>%</span>
+      <button class="splash-skip" type="button">Pular</button>
+    </div>
+
+    <header class="top" id="top">
+      <a class="logo" href="#hero" aria-label="Havaianas, início">havaianas</a>
+      <nav class="nav" aria-label="Principal">
+        <a href="#marca">Marca</a>
+        <a href="#modelos">Modelos</a>
+        <a href="#numeros">Números</a>
+      </nav>
+    </header>
+
+    <main>
+      <section
+        class="hero"
+        id="hero"
+        style={`--hero-bg:${first.bg}`}
+        data-models={JSON.stringify(heroModels)}
+      >
+        <h1 class="sr-only">Havaianas — as legítimas</h1>
+        <div class="hero-wipe" id="hero-wipe"></div>
+        <div class="hero-word" id="hero-word" aria-hidden="true">
+          {first.word}
+        </div>
+
+        {
+          [1, 2, 3, 4].map((n) => (
+            <div class={`orbit orbit-${n} ${n < 3 ? "orbit-l" : "orbit-r"}`}>
+              <div class="orbit-float">
+                <img src={first.single} alt="" />
+              </div>
+            </div>
+          ))
+        }
+
+        <div class="hero-product" id="hero-product">
+          <div class="hero-parallax" id="hero-parallax">
+            <div class="hero-flip" id="hero-flip">
+              <img
+                id="hero-img"
+                src={first.pair}
+                alt={`Par de ${first.name}`}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-bottom">
+          <p class="hero-tag">
+            As legítimas. <br />Todo mundo usa.
+          </p>
+          <div class="hero-dots" role="group" aria-label="Escolher modelo">
+            {
+              models.map((m, i) => (
+                <button
+                  class="hero-dot"
+                  type="button"
+                  style={`--dot:${m.dot}`}
+                  aria-label={m.name}
+                  aria-pressed={i === 0 ? "true" : "false"}
+                  data-index={i}
+                />
+              ))
+            }
+          </div>
+          <a class="btn magnet" href="#modelos">
+            <span class="magnet-inner">Ver modelos</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="brand" id="marca">
+        <div class="brand-text">
+          <span class="eyebrow">A marca</span>
+          <h2 class="title" data-float>Do Brasil para o mundo.</h2>
+          <p class="lead" data-reveal>
+            Nascida em 1962, a Havaianas transformou um chinelo de borracha em
+            ícone. Um produto simples, democrático e colorido, que cabe em
+            qualquer pé e em qualquer lugar.
+          </p>
+          <div class="pillars">
+            {
+              pillars.map((p, i) => (
+                <article class="pillar" style={`z-index:${3 - i}`}>
+                  <span class="pillar-n">0{i + 1}</span>
+                  <div>
+                    <h3>{p.title}</h3>
+                    <p>{p.text}</p>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+        <div class="brand-visual">
+          <div class="brand-ring" aria-hidden="true"></div>
+          <img id="brand-img" src={first.pair} alt="" />
+        </div>
+      </section>
+
+      <section class="models" id="modelos">
+        <span class="eyebrow">Modelos</span>
+        <h2 class="title" data-float>Um par para cada dia.</h2>
+        <div class="model-grid">
+          {
+            models.map((m) => (
+              <article class="model-card" style={`--card:${m.bg}`}>
+                <div class="model-glow" aria-hidden="true" />
+                <img src={m.single} alt={m.name} loading="lazy" />
+                <h3>{m.name}</h3>
+                <p>{m.text}</p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="numbers" id="numeros">
+        <h2 class="title" data-float>Números que andam longe.</h2>
+        <div class="stat-grid">
+          {
+            stats.map((s) => (
+              <div class="stat">
+                <div class="stat-value">
+                  {s.prefix}
+                  <span
+                    class="stat-count"
+                    data-target={s.value}
+                    data-plain={s.plain ? "1" : undefined}
+                    data-from={s.from}
+                  >
+                    {s.plain ? s.value : s.value.toLocaleString("pt-BR")}
+                  </span>
+                  {s.suffix}
+                </div>
+                <p>{s.label}</p>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span class="logo">havaianas</span>
+      <p>
+        Projeto conceito, não oficial, criado para portfólio. Havaianas é marca
+        registrada da Alpargatas.
+      </p>
+    </footer>
+
+    <script>
+      import "../scripts/animations.js";
+    </script>
+  </body>
+</html>
